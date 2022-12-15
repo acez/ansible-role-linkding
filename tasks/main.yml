@@ -1,0 +1,28 @@
+---
+- name: ensure folders are available
+  file:
+    path: "{{ linkding_filesystem_root }}/{{ item }}"
+    state: "directory"
+  with_items:
+    - data
+
+- name: ensure latest linkding image version
+  docker_image:
+    name: "{{ linkding_image_name }}"
+    tag: "{{ linkding_image_tag }}"
+    state: present
+    source: pull
+    force_source: yes
+
+- name: ensure linkding container running
+  docker_container:
+    name: "{{ linkding_container_name }}"
+    image: "{{ linkding_image_name }}:{{ linkding_image_tag }}"
+    state: started
+    restart_policy: unless-stopped
+    volumes:
+      - "{{ linkding_filesystem_root }}/data:/etc/linkding/data"
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    published_ports:
+      - "{{ linkding_config_http_port }}:9090"

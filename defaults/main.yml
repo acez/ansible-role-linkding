@@ -1,0 +1,6 @@
+---
+linkding_filesystem_root: "/srv/volumes/linkding"
+linkding_container_name: "linkding"
+linkding_image_name: "sissbruecker/linkding"
+linkding_image_tag: "latest"
+linkding_config_http_port: "9090"
