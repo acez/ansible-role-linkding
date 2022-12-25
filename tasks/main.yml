@@ -1,21 +1,22 @@
 ---
-- name: ensure folders are available
-  file:
+- name: Ensure folders are available
+  ansible.builtin.file:
     path: "{{ linkding_filesystem_root }}/{{ item }}"
     state: "directory"
+    mode: 0700
   with_items:
     - data
 
-- name: ensure latest linkding image version
-  docker_image:
+- name: Ensure latest linkding image version
+  community.docker.docker_image:
     name: "{{ linkding_image_name }}"
     tag: "{{ linkding_image_tag }}"
     state: present
     source: pull
-    force_source: yes
+    force_source: true
 
-- name: ensure linkding container running
-  docker_container:
+- name: Ensure linkding container running
+  community.docker.docker_container:
     name: "{{ linkding_container_name }}"
     image: "{{ linkding_image_name }}:{{ linkding_image_tag }}"
     state: started
